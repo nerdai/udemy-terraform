@@ -1,6 +1,6 @@
 # Configure the AWS Provider
 provider "aws" {
-  region = "us-east-1"
+  region = "ca-central-1"
 }
 #Retrieve the list of AZs in the current AWS region
 data "aws_availability_zones" "available" {}
@@ -20,7 +20,7 @@ resource "aws_subnet" "private_subnets" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = cidrsubnet(var.vpc_cidr, 8, each.value)
   availability_zone = tolist(data.aws_availability_zones.available.names)[
-    each.value
+    each.value - 1
   ]
 
   tags = {
@@ -34,7 +34,7 @@ resource "aws_subnet" "public_subnets" {
   vpc_id     = aws_vpc.vpc.id
   cidr_block = cidrsubnet(var.vpc_cidr, 8, each.value + 100)
   availability_zone = tolist(data.aws_availability_zones.available.names)[
-    each.value
+    each.value - 1
   ]
   map_public_ip_on_launch = true
 
