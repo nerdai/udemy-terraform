@@ -144,7 +144,7 @@ resource "aws_instance" "web_server" {                            # BLOCK
 }
 
 resource "aws_s3_bucket" "my-new-s3-bucket" {
-  bucket = "my-new-tf-test-bucket-andrei"
+  bucket = "my-new-tf-test-bucket-${random_id.randomness.hex}"
   
   tags = {
     Name = "My S3 Bucket"
@@ -182,4 +182,8 @@ resource "aws_security_group" "my-new-security-group" {
     Name = "web_server_inbound"
     Purpose = "Intro to Resource Blocks Lab"
   }
+}
+
+resource "random_id" "randomness" {
+  byte_length = 16
 }
