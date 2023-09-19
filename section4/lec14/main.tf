@@ -116,7 +116,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 
 #Create EIP for NAT Gateway
 resource "aws_eip" "nat_gateway_eip" {
-  domain = "vpc" 
+  domain     = "vpc"
   depends_on = [aws_internet_gateway.internet_gateway]
   tags = {
     Name = "demo_igw_eip"
@@ -144,13 +144,13 @@ resource "aws_instance" "web_server" {                            # BLOCK
 }
 
 resource "aws_subnet" "variables-subnet" {
-  vpc_id = aws_vpc.vpc.id
-  cidr_block = var.variables_sub_cidr
-  availability_zone = var.variables_sub_az
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.variables_sub_cidr
+  availability_zone       = var.variables_sub_az
   map_public_ip_on_launch = var.variables_sub_auto_ip
 
   tags = {
-    Name = "sub-variables-${var.variables_sub_az}"
+    Name      = "sub-variables-${var.variables_sub_az}"
     Terraform = "true"
   }
 }
