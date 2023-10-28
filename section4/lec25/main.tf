@@ -144,7 +144,7 @@ resource "aws_instance" "web_server" {                                          
   ami                         = data.aws_ami.ubuntu.id                          # Argument with data expression
   instance_type               = "t2.micro"                                      # Argument
   subnet_id                   = aws_subnet.public_subnets["public_subnet_1"].id # Argument with value as expression
-  security_groups             = [aws_security_group.aws_security_group.vpc-ping.id, aws_security_group.ingress-ssh.id, aws_security_group.vpc-web.id]
+  security_groups             = [aws_security_group.vpc-ping.id, aws_security_group.ingress-ssh.id, aws_security_group.vpc-web.id]
   associate_public_ip_address = true
   key_name                    = aws_key_pair.generated.key_name
   connection {
@@ -160,12 +160,19 @@ resource "aws_instance" "web_server" {                                          
    command = "chmod 600 ${local_file.private_key_pem.filename}" 
   }
 
+  provisioner "remote-exec" {
+    inline = [ 
+      "sudo rm -rf /tmp",
+      "sudo git clone https://github.com/hashicorp/demo-terraform-101 /tmp",
+      "sudo sh /tmp/assets/setup-web.sh",
+     ]
+    
+  }
+
   lifecycle {
     ignore_changes = [ security_groups ]
   }
 }
-
-
 
 resource "aws_subnet" "variables-subnet" {
   vpc_id                  = aws_vpc.vpc.id
